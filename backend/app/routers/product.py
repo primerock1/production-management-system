@@ -37,3 +37,34 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_product)
     return db_product
+
+@router.put("/{product_id}", response_model=ProductResponse)
+def update_product(product_id: int, product: ProductCreate, db: Session = Depends(get_db)):
+    """Обновить продукцию"""
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    # Проверяем, существует ли указанный тип продукции
+    if product.product_type_id:
+        product_type = db.query(ProductType).filter(ProductType.id == product.product_type_id).first()
+        if not product_type:
+            raise HTTPException(status_code=400, detail="Product type not found")
+    
+    for key, value in product.model_dump().items():
+        setattr(db_product, key, value)
+    
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+@router.delete("/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    """Удалить продукцию"""
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    db.delete(db_product)
+    db.commit()
+    return {"message": "Product deleted successfully"}

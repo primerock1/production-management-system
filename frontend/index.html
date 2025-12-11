@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система управления производством</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="logo.png" alt="Logo" class="navbar-logo me-2">
+                Система управления производством
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                            <i class="fas fa-tachometer-alt me-1"></i>Панель управления
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-database me-1"></i>Справочники
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('material-types')">Типы материалов</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSection('product-types')">Типы продукции</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSection('workshops')">Цеха</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('products')">
+                            <i class="fas fa-box me-1"></i>Продукция
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('product-workshops')">
+                            <i class="fas fa-link me-1"></i>Связи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('calculator')">
+                            <i class="fas fa-calculator me-1"></i>Калькулятор
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container-fluid mt-4">
+        <!-- Панель управления -->
+        <div id="dashboard-section" class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-tachometer-alt me-3"></i>
+                            Панель управления
+                        </h1>
+                        <p class="page-subtitle">Обзор системы управления производством</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white stats-card clickable-card" onclick="showSection('material-types')" style="cursor: pointer;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 id="material-types-count">-</h4>
+                                    <p class="mb-0">Типы материалов</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-cubes fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white stats-card clickable-card" onclick="showSection('product-types')" style="cursor: pointer;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 id="product-types-count">-</h4>
+                                    <p class="mb-0">Типы продукции</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-tags fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white stats-card clickable-card" onclick="showSection('workshops')" style="cursor: pointer;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 id="workshops-count">-</h4>
+                                    <p class="mb-0">Цеха</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-industry fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white stats-card clickable-card" onclick="showSection('products')" style="cursor: pointer;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 id="products-count">-</h4>
+                                    <p class="mb-0">Продукция</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-box fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Типы материалов -->
+        <div id="material-types-section" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center page-header">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-cubes me-3"></i>
+                                Типы материалов
+                            </h1>
+                            <p class="page-subtitle">Управление типами материалов и их характеристиками</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="showAddMaterialTypeModal()">
+                            <i class="fas fa-plus me-2"></i>Добавить материал
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="material-types-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Название</th>
+                                            <th>Процент потерь (%)</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Типы продукции -->
+        <div id="product-types-section" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center page-header">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-tags me-3"></i>
+                                Типы продукции
+                            </h1>
+                            <p class="page-subtitle">Управление типами продукции и коэффициентами</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="showAddProductTypeModal()">
+                            <i class="fas fa-plus me-2"></i>Добавить тип
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="product-types-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Название</th>
+                                            <th>Коэффициент</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Цеха -->
+        <div id="workshops-section" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center page-header">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-industry me-3"></i>
+                                Цеха производства
+                            </h1>
+                            <p class="page-subtitle">Управление производственными цехами и персоналом</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="showAddWorkshopModal()">
+                            <i class="fas fa-plus me-2"></i>Добавить цех
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="workshops-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Название</th>
+                                            <th>Тип цеха</th>
+                                            <th>Количество персонала</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Продукция -->
+        <div id="products-section" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center page-header">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-box me-3"></i>
+                                Продукция
+                            </h1>
+                            <p class="page-subtitle">Каталог продукции с характеристиками и ценами</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="showAddProductModal()">
+                            <i class="fas fa-plus me-2"></i>Добавить продукт
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Название</th>
+                                            <th>Тип продукции</th>
+                                            <th>Артикул</th>
+                                            <th>Мин. цена</th>
+                                            <th>Основной материал</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Связи продукции и цехов -->
+        <div id="product-workshops-section" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center page-header">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-link me-3"></i>
+                                Связи продукции и цехов
+                            </h1>
+                            <p class="page-subtitle">Управление производственными процессами и временем изготовления</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="showAddProductWorkshopModal()">
+                            <i class="fas fa-plus me-2"></i>Добавить связь
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="product-workshops-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Продукция</th>
+                                            <th>Цех</th>
+                                            <th>Время производства (ч)</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Калькулятор сырья -->
+        <div id="calculator-section" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-calculator me-3"></i>
+                            Калькулятор сырья
+                        </h1>
+                        <p class="page-subtitle">Расчет необходимого количества сырья для производства</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <!-- Форма расчета -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-calculator me-2"></i>Расчет сырья</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="material-calculator-form">
+                                <div class="mb-3">
+                                    <label for="calc-product-type" class="form-label">Тип продукции *</label>
+                                    <select class="form-select" id="calc-product-type" required>
+                                        <option value="">Выберите тип продукции</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="calc-material-type" class="form-label">Тип материала *</label>
+                                    <select class="form-select" id="calc-material-type" required>
+                                        <option value="">Выберите тип материала</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="calc-quantity" class="form-label">Количество продукции *</label>
+                                    <input type="number" class="form-control" id="calc-quantity" min="1" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="calc-param1" class="form-label">Параметр 1 (длина) *</label>
+                                            <input type="number" class="form-control" id="calc-param1" step="0.01" min="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="calc-param2" class="form-label">Параметр 2 (ширина) *</label>
+                                            <input type="number" class="form-control" id="calc-param2" step="0.01" min="0.01" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-calculator me-2"></i>Рассчитать
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Результат расчета -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-bar me-2"></i>Результат расчета</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="calculation-result" class="text-center">
+                                <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Заполните форму и нажмите "Рассчитать" для получения результата</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <!-- Цеха для продукта -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-industry me-2"></i>Цеха для производства продукта</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="product-select" class="form-label">Выберите продукт</label>
+                                <select class="form-select" id="product-select">
+                                    <option value="">Выберите продукт для просмотра цехов</option>
+                                </select>
+                            </div>
+                            <div id="workshops-for-product">
+                                <div class="text-center text-muted">
+                                    <i class="fas fa-industry fa-3x mb-3"></i>
+                                    <p>Выберите продукт для просмотра цехов производства</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальные окна будут добавлены через JavaScript -->
+    <div id="modal-container"></div>
+
+    <!-- Футер -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <img src="logo.png" alt="Logo" class="footer-logo me-2">
+                        <div>
+                            <h6 class="mb-0">Система управления производством</h6>
+                            <small class="text-muted">Версия 1.0.0</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-muted">
+                        © 2025 Все права защищены
+                    </p>
+                    <small class="text-muted">
+                        Разработано с использованием FastAPI и Bootstrap
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Уведомления -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
+
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

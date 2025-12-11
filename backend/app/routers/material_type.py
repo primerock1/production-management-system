@@ -35,3 +35,36 @@ def create_material_type(material_type: MaterialTypeCreate, db: Session = Depend
     db.commit()
     db.refresh(db_material_type)
     return db_material_type
+
+@router.put("/{material_type_id}", response_model=MaterialTypeResponse)
+def update_material_type(material_type_id: int, material_type: MaterialTypeCreate, db: Session = Depends(get_db)):
+    """Обновить тип материала"""
+    db_material_type = db.query(MaterialType).filter(MaterialType.id == material_type_id).first()
+    if not db_material_type:
+        raise HTTPException(status_code=404, detail="Material type not found")
+    
+    # Проверяем уникальность имени (исключая текущую запись)
+    existing = db.query(MaterialType).filter(
+        MaterialType.name == material_type.name,
+        MaterialType.id != material_type_id
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Material type with this name already exists")
+    
+    for key, value in material_type.model_dump().items():
+        setattr(db_material_type, key, value)
+    
+    db.commit()
+    db.refresh(db_material_type)
+    return db_material_type
+
+@router.delete("/{material_type_id}")
+def delete_material_type(material_type_id: int, db: Session = Depends(get_db)):
+    """Удалить тип материала"""
+    db_material_type = db.query(MaterialType).filter(MaterialType.id == material_type_id).first()
+    if not db_material_type:
+        raise HTTPException(status_code=404, detail="Material type not found")
+    
+    db.delete(db_material_type)
+    db.commit()
+    return {"message": "Material type deleted successfully"}

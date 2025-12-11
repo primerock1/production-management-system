@@ -7,6 +7,7 @@ from app.routers import (
     workshop,
     product,
     product_workshop,
+    material_calculator,
 )
 
 app = FastAPI(
@@ -30,6 +31,7 @@ app.include_router(product_type.router)
 app.include_router(workshop.router)
 app.include_router(product.router)
 app.include_router(product_workshop.router)
+app.include_router(material_calculator.router)
 
 @app.get("/")
 def root():
@@ -44,6 +46,7 @@ def root():
             "workshops": "/api/workshops",
             "products": "/api/products",
             "product_workshops": "/api/product-workshops",
+            "calculator": "/api/calculator",
         }
     }
 

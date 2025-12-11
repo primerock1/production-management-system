@@ -35,3 +35,36 @@ def create_workshop(workshop: WorkshopCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_workshop)
     return db_workshop
+
+@router.put("/{workshop_id}", response_model=WorkshopResponse)
+def update_workshop(workshop_id: int, workshop: WorkshopCreate, db: Session = Depends(get_db)):
+    """Обновить цех"""
+    db_workshop = db.query(Workshop).filter(Workshop.id == workshop_id).first()
+    if not db_workshop:
+        raise HTTPException(status_code=404, detail="Workshop not found")
+    
+    # Проверяем уникальность имени (исключая текущую запись)
+    existing = db.query(Workshop).filter(
+        Workshop.name == workshop.name,
+        Workshop.id != workshop_id
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Workshop with this name already exists")
+    
+    for key, value in workshop.model_dump().items():
+        setattr(db_workshop, key, value)
+    
+    db.commit()
+    db.refresh(db_workshop)
+    return db_workshop
+
+@router.delete("/{workshop_id}")
+def delete_workshop(workshop_id: int, db: Session = Depends(get_db)):
+    """Удалить цех"""
+    db_workshop = db.query(Workshop).filter(Workshop.id == workshop_id).first()
+    if not db_workshop:
+        raise HTTPException(status_code=404, detail="Workshop not found")
+    
+    db.delete(db_workshop)
+    db.commit()
+    return {"message": "Workshop deleted successfully"}

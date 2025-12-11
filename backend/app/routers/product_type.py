@@ -35,3 +35,36 @@ def create_product_type(product_type: ProductTypeCreate, db: Session = Depends(g
     db.commit()
     db.refresh(db_product_type)
     return db_product_type
+
+@router.put("/{product_type_id}", response_model=ProductTypeResponse)
+def update_product_type(product_type_id: int, product_type: ProductTypeCreate, db: Session = Depends(get_db)):
+    """Обновить тип продукции"""
+    db_product_type = db.query(ProductType).filter(ProductType.id == product_type_id).first()
+    if not db_product_type:
+        raise HTTPException(status_code=404, detail="Product type not found")
+    
+    # Проверяем уникальность имени (исключая текущую запись)
+    existing = db.query(ProductType).filter(
+        ProductType.name == product_type.name,
+        ProductType.id != product_type_id
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Product type with this name already exists")
+    
+    for key, value in product_type.model_dump().items():
+        setattr(db_product_type, key, value)
+    
+    db.commit()
+    db.refresh(db_product_type)
+    return db_product_type
+
+@router.delete("/{product_type_id}")
+def delete_product_type(product_type_id: int, db: Session = Depends(get_db)):
+    """Удалить тип продукции"""
+    db_product_type = db.query(ProductType).filter(ProductType.id == product_type_id).first()
+    if not db_product_type:
+        raise HTTPException(status_code=404, detail="Product type not found")
+    
+    db.delete(db_product_type)
+    db.commit()
+    return {"message": "Product type deleted successfully"}
